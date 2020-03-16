@@ -1,14 +1,15 @@
-from methods.flann import Flann
-# TODO: import methods
-
-# TODO: append methods
-METHODS = [Flann]
-
-methods_str_mapping = {m.__name__: m for m in METHODS}
-
-
 def load_method(method):
-  if method in methods_str_mapping.keys():
-    return methods_str_mapping[method]
+  if method == 'Flann':
+    from methods.flann import Flann
+    return Flann
+  elif method == 'BufferKD':
+    from methods.bufferkd import BufferKD
+    return BufferKD
+  elif method == 'Faiss':
+    from methods.faiss import Faiss
+    return Faiss
+  elif method == 'KnnCUDA':
+    from methods.knncuda import KnnCUDA
+    return KnnCUDA
   else:
     raise ValueError(f'Method {method} not found')
