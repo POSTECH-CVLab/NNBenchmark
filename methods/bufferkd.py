@@ -1,8 +1,6 @@
 from methods.base_method import BaseMethod
 from bufferkdtree.neighbors import NearestNeighbors
 
-K = 1
-R = 0.1
 tree_depth = 9
 plat_dev_ids = {0:[0]}
 
@@ -13,7 +11,7 @@ class BufferKD(BaseMethod):
 
   def prepare_input(self, x, y):
     if self.search_method == 'knn':
-      tree = NearestNeighbors(n_neighbors = 1, algorithm="buffer_kd_tree", plat_dev_ids=plat_dev_ids)
+      tree = NearestNeighbors(n_neighbors = self.knn, algorithm="buffer_kd_tree", plat_dev_ids=plat_dev_ids)
       tree.fit(x)
       return tree, y
     elif self.search_method == 'radius':
