@@ -1,15 +1,16 @@
 import argparse
 import os
+import sys
 
 from dataloader import dataloader
 from methods import load_method
 from timer import Timer
 
-
 def match(method, num_iter, shape):
   d = dataloader(shape=shape, num_iter=num_iter)
   prepare_timer, match_timer = Timer(), Timer()
 
+  i = 1
   for x, y in d:
     prepare_timer.tic()
     tree, query = method.prepare_input(x, y)
@@ -19,7 +20,9 @@ def match(method, num_iter, shape):
     method.match(tree, query)
     match_timer.toc()
 
-    print("prepare time: %.4f, match time: %.4f" % (prepare_timer.avg, match_timer.avg))
+    sys.stdout.write("\r [%d/%d]" % (i, num_iter))
+    sys.stdout.flush()
+    i += 1
 
   return prepare_timer.avg, match_timer.avg
 
@@ -42,10 +45,12 @@ if __name__ == "__main__":
 
   opt = parser.parse_args()
 
-  method = load_method(opt.method)
+  Method = load_method(opt.method)
+  method = Method(opt)
+
   scales = [pow(10, s) for s in range(0, opt.num_scale)]
 
   for scale in scales:
     shape = (scale, opt.dimension)
     result = match(method, opt.num_iter, shape)
-    print(result)
+    print("Shape: %s, prepare time %.4f, matching time %.4f" % (shape, result[0], result[1]))
