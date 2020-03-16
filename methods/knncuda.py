@@ -1,5 +1,5 @@
 from methods.base_method import BaseMethod
-
+import knn
 
 class KnnCUDA(BaseMethod):
 
@@ -7,7 +7,8 @@ class KnnCUDA(BaseMethod):
     BaseMethod.__init__(self, opt)
 
   def prepare_input(self, x, y):
-    pass
+    return x, y
 
   def match(self, tree, query):
-    pass
+    x = tree
+    dist_list, idx_list = knn.knn(x.reshape(self.opt.dimenstion, -1), y.reshape(self.opt.dimenstion, -1), self.knn)
