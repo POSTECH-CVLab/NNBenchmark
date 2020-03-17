@@ -1,5 +1,5 @@
 import open3d as o3d
-
+import numpy as np
 from methods.base_method import BaseMethod
 
 
@@ -23,4 +23,4 @@ class Flann(BaseMethod):
 
       idx_list.append(idx)
       dist_list.append(dist)
-    return dist_list, idx_list
+    return np.array(dist_list), np.array(idx_list)

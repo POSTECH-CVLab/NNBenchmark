@@ -1,7 +1,8 @@
 import numpy as np
 
 
-def dataloader(shape, num_iter, seed=1234):
+def dataloader(num_iter, n, d, seed=1234):
+  shape = (n, d)
   randg = np.random.RandomState(seed)
   for _ in range(num_iter):
     x = randg.rand(*shape).astype(np.float32)
