@@ -1,4 +1,5 @@
 import argparse
+import errno
 import itertools
 import os
 import sys
@@ -47,6 +48,16 @@ def sanity_check(method):
   print(is_pass)
 
 
+def mkdir_p(path):
+  try:
+    os.makedirs(path)
+  except OSError as exc:  #Python > 2.5
+    if exc.errno == errno.EEXIST and os.path.isdir(path):
+      pass
+    else:
+      raise
+
+
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument(
@@ -58,7 +69,7 @@ if __name__ == "__main__":
       '--search_method', type=str, default='knn', choices=['knn', 'radius'])
   parser.add_argument('--knn', type=int, default=1)
   parser.add_argument('--radius', type=float, default=0.1)
-  parser.add_argument('--out_dir', type=str, default='.')
+  parser.add_argument('--out_dir', type=str, default='./outputs')
   parser.add_argument('--sanity', action='store_true')
 
   opt = parser.parse_args()
@@ -80,6 +91,8 @@ if __name__ == "__main__":
       print("N %d, D %d, prepare time %.4f, matching time %.4f, total time %.4f" %
             result)
       results.append(result)
+
+    mkdir_p(opt.out_dir)
 
     filename = os.path.join(opt.out_dir, opt.method)
     df = pd.DataFrame(results, columns=['n', 'd', 'prepare', 'match', 'total'])
