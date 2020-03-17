@@ -23,3 +23,4 @@ class Flann(BaseMethod):
 
       idx_list.append(idx)
       dist_list.append(dist)
+    return dist_list, idx_list

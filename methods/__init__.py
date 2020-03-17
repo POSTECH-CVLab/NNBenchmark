@@ -12,4 +12,4 @@ def load_method(method):
     from methods.knncuda import KnnCUDA
     return KnnCUDA
   else:
-    raise ValueError(f'Method {method} not found')
+    raise ValueError('Method %s not found' % (method))

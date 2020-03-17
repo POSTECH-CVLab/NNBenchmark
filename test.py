@@ -6,6 +6,7 @@ from dataloader import dataloader
 from methods import load_method
 from timer import Timer
 
+
 def match(method, num_iter, shape):
   d = dataloader(shape=shape, num_iter=num_iter)
   prepare_timer, match_timer = Timer(), Timer()
@@ -53,4 +54,5 @@ if __name__ == "__main__":
   for scale in scales:
     shape = (scale, opt.dimension)
     result = match(method, opt.num_iter, shape)
-    print("Shape: %s, prepare time %.4f, matching time %.4f" % (shape, result[0], result[1]))
+    print("Shape: %s, prepare time %.4f, matching time %.4f" %
+          (shape, result[0], result[1]))
