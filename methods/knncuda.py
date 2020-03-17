@@ -1,4 +1,6 @@
 from methods.base_method import BaseMethod
+import sys
+sys.path.append("/root/code/knn_cuda/knn_cuda")
 import knn
 
 class KnnCUDA(BaseMethod):
@@ -11,4 +13,4 @@ class KnnCUDA(BaseMethod):
 
   def match(self, tree, query):
     x = tree
-    dist_list, idx_list = knn.knn(x.reshape(self.opt.dimenstion, -1), y.reshape(self.opt.dimenstion, -1), self.knn)
+    dist_list, idx_list = knn.knn(x.reshape(self.opt.dimension, -1), query.reshape(self.opt.dimension, -1), self.knn)
