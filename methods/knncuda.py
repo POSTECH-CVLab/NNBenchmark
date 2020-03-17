@@ -15,4 +15,7 @@ class KnnCUDA(BaseMethod):
 
   def match(self, tree, query, k):
     dist_list, idx_list = knn.knn(tree, query, k)
+    dist_list = dist_list.T
+    # index basis is 1
+    idx_list = idx_list.T - 1
     return dist_list, idx_list
