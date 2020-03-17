@@ -9,10 +9,12 @@ class Faiss(BaseMethod):
 
   def __init__(self, opt):
     BaseMethod.__init__(self, opt)
+    self.res = faiss.StandardGpuResources()
 
   def prepare_input(self, x, y):
-    cpu_index = faiss.IndexFlatL2(self.opt.dimension)
-    gpu_index = faiss.index_cpu_to_all_gpus(cpu_index)
+    d = x.shape[-1]
+    cpu_index = faiss.IndexFlatL2(d)
+    gpu_index = faiss.index_cpu_to_gpu(self.res, 0, cpu_index)
     gpu_index.add(x)
     return gpu_index, y
 
