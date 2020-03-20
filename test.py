@@ -90,10 +90,10 @@ if __name__ == "__main__":
     k_list = [pow(2, k) for k in range(0, opt.max_knn + 1)]
 
     results = []
-    sweep = [[n, 4, 1] for n in n_list]
-    sweep.extend([[1000, d, 1] for d in d_list])
-    sweep.extend([[1000, 4, k] for k in k_list])
-
+    sweep = [[pow(10,5), d, 1] for d in d_list]
+    sweep.extend([[pow(10,5), 4, k] for k in k_list])
+    sweep.extend([[n, 3, 1] for n in n_list])
+    
     mkdir_p(opt.out_dir)
     timestr = time.strftime("_%Y%m%d-%H%M%S")
     filename = os.path.join(opt.out_dir, opt.method + timestr)

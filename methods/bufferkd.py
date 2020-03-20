@@ -12,13 +12,13 @@ class BufferKD(BaseMethod):
 
   def prepare_input(self, x, y, k):
     tree = NearestNeighbors(
-        n_neighbors=k,
         algorithm="buffer_kd_tree",
         plat_dev_ids=plat_dev_ids,
-        tree_depth=9)
+        tree_depth=9,
+    )
     tree.fit(x)
     return tree, y
 
   def match(self, tree, query, k):
-    dist_list, idx_list = tree.kneighbors(query)
+    dist_list, idx_list = tree.kneighbors(query, n_neighbors=k)
     return dist_list, idx_list
