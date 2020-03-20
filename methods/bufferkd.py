@@ -9,8 +9,10 @@ class BufferKD(BaseMethod):
 
   def __init__(self, opt):
     BaseMethod.__init__(self, opt)
+    if self.search_method == 'radius':
+      raise ValueError(f'search method radius is not supported for {self.__class__.__name__} ')
 
-  def prepare_input(self, x, y, k):
+  def prepare_input(self, x, y):
     tree = NearestNeighbors(
         algorithm="buffer_kd_tree",
         plat_dev_ids=plat_dev_ids,
@@ -19,6 +21,6 @@ class BufferKD(BaseMethod):
     tree.fit(x)
     return tree, y
 
-  def match(self, tree, query, k):
+  def match(self, tree, query, k=None, radius=None):
     dist_list, idx_list = tree.kneighbors(query, n_neighbors=k)
     return dist_list, idx_list

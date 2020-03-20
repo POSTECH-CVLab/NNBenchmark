@@ -12,7 +12,7 @@ from methods import load_method
 from timer import Timer
 
 
-def match(method, n, d, k, num_iter):
+def match_knn(method, n, d, k, num_iter):
   dataset = dataloader(num_iter=num_iter, n=n, d=d)
   prepare_timer, match_timer, total_timer = Timer(), Timer(), Timer()
   min_k = min(n, k)
@@ -21,13 +21,12 @@ def match(method, n, d, k, num_iter):
   for x, y in dataset:
     total_timer.tic()
     prepare_timer.tic()
-    tree, query = method.prepare_input(x, y, min_k)
+    tree, query = method.prepare_input(x, y)
     prepare_timer.toc()
 
     match_timer.tic()
-    result = method.match(tree, query, min_k)
+    result = method.match(tree, query, k=min_k)
     match_timer.toc()
-
     total_timer.toc()
 
     sys.stdout.write(
@@ -74,6 +73,7 @@ if __name__ == "__main__":
   parser.add_argument(
       '--search_method', type=str, default='knn', choices=['knn', 'radius'])
   parser.add_argument('--radius', type=float, default=0.1)
+  parser.add_argument('--faiss_index_string', type=str, default='Flat')
   parser.add_argument('--out_dir', type=str, default='./outputs')
   parser.add_argument('--sanity', action='store_true')
 
@@ -89,7 +89,6 @@ if __name__ == "__main__":
     d_list = [pow(2, d) for d in range(0, opt.max_dim + 1)]
     k_list = [pow(2, k) for k in range(0, opt.max_knn + 1)]
 
-    results = []
     sweep = [[pow(10,5), d, 1] for d in d_list]
     sweep.extend([[pow(10,5), 4, k] for k in k_list])
     sweep.extend([[n, 3, 1] for n in n_list])
@@ -98,8 +97,9 @@ if __name__ == "__main__":
     timestr = time.strftime("_%Y%m%d-%H%M%S")
     filename = os.path.join(opt.out_dir, opt.method + timestr)
 
+    results = []
     for n, d, k in sweep:
       with open(filename, 'ab') as f:
-        result = match(method, n, d, k, opt.num_iter)
+        result = match_knn(method, n, d, k, opt.num_iter)
         np.savetxt(f, [result], fmt="%d %d %d %.4f %.4f %.4f")
       results.append(result)
